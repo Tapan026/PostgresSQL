@@ -1,0 +1,7 @@
+---
+- name: Setup psql_Standalone 
+  hosts: all
+  remote_user: ubuntu
+  become: true
+  roles:
+    - role: psql_standalone

@@ -1,0 +1,61 @@
+# configuration.yml
+- name: Configure PostgreSQL to listen on all interfaces
+  ansible.builtin.template:
+    src: postgresql.conf.j2
+    dest: "{{ postgresql_conf_path }}"
+    owner: postgres
+    group: postgres
+    mode: 0644
+  notify: psql_restart
+
+- name: Configure pg_hba.conf
+  ansible.builtin.template:
+    src: pg_hba.conf.j2
+    dest: "{{ pg_hba_conf_path }}"
+    owner: postgres
+    group: postgres
+    mode: 0600
+  notify: psql_restart
+
+- name: Start and enable PostgreSQL service
+  ansible.builtin.systemd:
+    name: "{{ postgresql_service }}"
+    enabled: yes
+    state: started
+
+- name: Alter Postgres Password
+  ansible.builtin.shell: |
+    sudo -u postgres psql -c "ALTER USER {{ postgres_user }} WITH PASSWORD '{{ postgres_password }}';"
+  register: result
+  args:
+    chdir: /tmp  
+  changed_when: true
+
+- name: Create Database for Postgres
+  ansible.builtin.shell: |
+    create_db_result=$(sudo -u postgres psql -c "CREATE DATABASE {{ postgres_db_name }};" || true)
+  register: result
+  args:
+    chdir: /tmp  
+  changed_when: true
+
+# - name: Create PostgreSQL users
+#   ansible.builtin.postgresql_user:
+#     name: "{{ item.name }}"
+#     password: "{{ item.password }}"
+#     priv: "{{ item.privileges }}"
+#     state: present
+#   with_items: "{{ postgresql_users }}"
+#   become: true
+#   become_user: postgres
+#   become_method: sudo
+
+# - name: Create PostgreSQL databases
+#   ansible.builtin.postgresql_db:
+#     name: "{{ item.name }}"
+#     owner: "{{ item.owner }}"
+#     state: present
+#   with_items: "{{ postgresql_databases }}"
+#   become: true
+#   become_user: postgres
+

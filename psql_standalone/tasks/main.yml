@@ -1,0 +1,5 @@
+---
+- name: Installing psql
+  ansible.builtin.include_tasks: psql_instal.yml
+- name: configuring psql
+  ansible.builtin.include_tasks: psql_configure.yml
