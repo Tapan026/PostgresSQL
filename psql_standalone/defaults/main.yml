@@ -1,0 +1,17 @@
+---
+postgresql_version: "15"
+psql_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+psql_gpg_keyring: "/etc/apt/trusted.gpg.d/ACCC4CF8.gpg"
+postgresql_port: 5432
+postgresql_data_dir: "/var/lib/postgresql/{{ postgresql_version }}/data"
+postgresql_bin_dir: "/usr/pgsql-{{ postgresql_version }}/bin"
+postgresql_service: "postgresql"
+postgresql_conf_path: "{{ postgresql_data_dir }}/postgresql.conf"
+pg_hba_conf_path: "{{ postgresql_data_dir }}/pg_hba.conf"
+postgresql_listen_address: "localhost"
+postgresql_auth_method: "md5"
+
+postgres_user: postgres 
+postgres_password: password
+postgres_db_name: db02
+

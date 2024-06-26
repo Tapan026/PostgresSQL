@@ -1,0 +1,4 @@
+# templates/postgresql.conf.j2
+listen_addresses = '{{ postgresql_listen_address }}'
+port = {{ postgresql_port }}
+data_directory = '{{ postgresql_data_dir }}'
